@@ -1,34 +1,35 @@
 import sys
-MAX=25
-tati=[0]
-tati[0]=-1
-fii=[0]*MAX
-sol=[0]*MAX
-OPERATORI=['^','~','=','!']
+
+MAX = 25
+tati = [0]
+tati[0] = -1
+fii = [0] * MAX
+sol = [0] * MAX
+OPERATORI = ['^', '~', '=', '!']
 
 # = este => implica
 # ! este not
 # ~ este or
 
-expresie='((P^Q)^((!R)=G))'
-# bugs: R)
+expresie = '((P^Q)=((!R)^(!Q)))'
 # not sure: '()'
 
 ind = 0
 
-def sift(ind,tati):
+
+def sift(ind, tati):
     # aceasta functie ma duce in sus pe arbore
     # adica ma ajuta sa urc un nivel
-    if ind>=0:
+    if ind >= 0:
         return tati[ind]
     else:
         return -2
 
-def percolate(ind,fii):
+
+def percolate(ind, fii):
     # aceasta functie ma duce in jos pe arbore
     # adica ma ajuta sa cobor un nivel
     # obs: cobor la fiul care este liber de pe acel nivel
-
 
     # daca fac ceva nepermis
     # omor programul
@@ -42,66 +43,69 @@ def percolate(ind,fii):
         print('Expresia este INCORECTA')
         sys.exit()
 
-def create_nodes2(tati,fii,ind):
+
+def create_nodes2(tati, fii, ind):
     # aceasta functie ma ajuta sa creez doua noi noduri
     # pentru cazul in care gasesc '('
     # si am nevoie de doua noi noduri
     fii[ind] = list()
     tati.append(ind)
-    fii[ind].append(len(tati)-1)
+    fii[ind].append(len(tati) - 1)
     tati.append(ind)
     fii[ind].append(len(tati) - 1)
-    ind = len(tati)-2
+    ind = len(tati) - 2
     return ind
 
-def create_nodes1(tati,fii,ind):
+
+def create_nodes1(tati, fii, ind):
     # aceasta functie ma ajuta sa creez un singur nou nod
     # pentru cazul in care am gasit '!'
     # adica negatie
     fii[ind] = list()
     tati.append(ind)
-    fii[ind].append(len(tati)-1)
+    fii[ind].append(len(tati) - 1)
     # aici indicele sta pe loc
     # pentru ca trebuie sa pun '!'
     # adic anot pe acea pozitie
     return ind
+
 
 if expresie.count('(') == 0:
     # daca nu are paranteze deschise
     print('Expresia este INCORECTA')
     sys.exit()
 
-for i,chr in enumerate(expresie):
+for i, chr in enumerate(expresie):
     # for debugging
-    print(i,tati,fii,ind,sol)
+    print(i, tati, fii, ind, sol)
     # doar daca mai am unde sa merg in fata
-    if i<len(expresie)-1:
-        next_chr = expresie[i+1]
+    if i < len(expresie) - 1:
+        next_chr = expresie[i + 1]
     else:
-        next_chr=''
+        next_chr = ''
     if chr == ')':
-        ind = sift(ind,tati)
+        ind = sift(ind, tati)
     elif chr == '(':
         # peeking over the next item
         if next_chr == '(':
             # daca vrea sa fie complexa am nevoie de doua noduri
-            ind = create_nodes2(tati,fii,ind)
+            ind = create_nodes2(tati, fii, ind)
         elif next_chr == '!':
             # daca e negatie am nevoie doar de un nod
-           ind = create_nodes1(tati,fii,ind)
+            ind = create_nodes1(tati, fii, ind)
         elif next_chr.isalpha():
             # daca e litera tot am nevoie de doua noduri, dar acum
             # pot sa si pun litera unde ii este locul
-            ind = create_nodes2(tati,fii,ind)
+            ind = create_nodes2(tati, fii, ind)
             sol[ind] = next_chr
     elif chr.isalpha():
         # daca este litera o pun si merg in sus
         sol[ind] = chr
-        ind = sift(ind,tati)
+        ind = sift(ind, tati)
     elif chr in OPERATORI:
         # daca e operrator il pun si merg in jos
-        sol[ind]=chr
-        ind = percolate(ind,fii)
+        sol[ind] = chr
+        ind = percolate(ind, fii)
 # daca am ajuns la tatal radacinii si nu am omorat programul in prealabil
 # atunci e corecta
 if ind == -1:
