@@ -1,6 +1,6 @@
 import sys
 
-MAX = 25
+MAX = 30
 tati = [0]
 tati[0] = -1
 fii = [0] * MAX
@@ -11,7 +11,7 @@ OPERATORI = ['^', '~', '=', '!']
 # ! este not
 # ~ este or
 
-expresie = '((P^Q)=((!R)^(!Q)))'
+expresie = '(((((P^Q)=((!R)^(!Q)))^(!G))=((G=P)^(!((P^H))=(!(E^J)))))^A)'
 # not sure: '()'
 
 ind = 0
@@ -23,6 +23,7 @@ def sift(ind, tati):
     if ind >= 0:
         return tati[ind]
     else:
+        # sau as putea sa omor programul direct
         return -2
 
 
