@@ -8,13 +8,22 @@ OPERATORI=['^','~','=','!']
 # = este => implica
 # ! este not
 # ~ este or
-expresie='((!Q))'
+expresie='R)'
+# bugs: R)
+# bugs: '('
 ind = 0
 
 def sift(ind,tati):
+    # aceasta functie ma duce in sus pe arbore
+    # adica ma ajuta sa urc un nivel
     return tati[ind]
 
 def percolate(ind,fii):
+    # aceasta functie ma duce in jos pe arbore
+    # adica ma ajuta sa cobor un nivel
+    # obs: cobor la fiul care este liber de pe acel nivel
+
+
     # daca fac ceva nepermis
     # omor programul
     # cu sys.exit()
@@ -28,6 +37,9 @@ def percolate(ind,fii):
         sys.exit()
 
 def create_nodes2(tati,fii,ind):
+    # aceasta functie ma ajuta sa creez doua noi noduri
+    # pentru cazul in care gasesc '('
+    # si am nevoie de doua noi noduri
     fii[ind] = list()
     tati.append(ind)
     fii[ind].append(len(tati)-1)
@@ -37,13 +49,20 @@ def create_nodes2(tati,fii,ind):
     return ind
 
 def create_nodes1(tati,fii,ind):
+    # aceasta functie ma ajuta sa creez un singur nou nod
+    # pentru cazul in care am gasit '!'
+    # adica negatie
     fii[ind] = list()
     tati.append(ind)
     fii[ind].append(len(tati)-1)
+    # aici indicele sta pe loc
+    # pentru ca trebuie sa pun '!'
+    # adic anot pe acea pozitie
     return ind
 
 
 for i,chr in enumerate(expresie):
+    # for debugging
     print(i,tati,fii,ind,sol)
     # doar daca mai am unde sa merg in fata
     if i<len(expresie)-1:
@@ -53,20 +72,27 @@ for i,chr in enumerate(expresie):
     elif chr == '(':
         # peeking over the next item
         if next_chr == '(':
+            # daca vrea sa fie complexa am nevoie de doua noduri
             ind = create_nodes2(tati,fii,ind)
         elif next_chr == '!':
+            # daca e negatie am nevoie doar de un nod
            ind = create_nodes1(tati,fii,ind)
         elif next_chr.isalpha():
+            # daca e litera tot am nevoie de doua noduri, dar acum
+            # pot sa si pun litera unde ii este locul
             ind = create_nodes2(tati,fii,ind)
             sol[ind] = next_chr
     elif chr.isalpha():
+        # daca este litera o pun si merg in sus
         sol[ind] = chr
         ind = sift(ind,tati)
     elif chr in OPERATORI:
+        # daca e operrator il pun si merg in jos
         sol[ind]=chr
         ind = percolate(ind,fii)
-
+# daca am ajuns la tatal radacinii si nu am omorat programul in prealabil
+# atunci e corecta
 if ind == -1:
-    print('Expresie este CORECTA')
+    print('Expresia este CORECTA')
 else:
     print('Expresia este INCORECTA')
