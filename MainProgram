@@ -1,22 +1,28 @@
 import sys
+MAX=25
 tati=[0]
 tati[0]=-1
-fii=[0]*20
-sol=[0]*20
+fii=[0]*MAX
+sol=[0]*MAX
 OPERATORI=['^','~','=','!']
 
 # = este => implica
 # ! este not
 # ~ este or
-expresie='R)'
+
+expresie='((P^Q)^((!R)=G))'
 # bugs: R)
-# bugs: '('
+# not sure: '()'
+
 ind = 0
 
 def sift(ind,tati):
     # aceasta functie ma duce in sus pe arbore
     # adica ma ajuta sa urc un nivel
-    return tati[ind]
+    if ind>=0:
+        return tati[ind]
+    else:
+        return -2
 
 def percolate(ind,fii):
     # aceasta functie ma duce in jos pe arbore
@@ -60,6 +66,10 @@ def create_nodes1(tati,fii,ind):
     # adic anot pe acea pozitie
     return ind
 
+if expresie.count('(') == 0:
+    # daca nu are paranteze deschise
+    print('Expresia este INCORECTA')
+    sys.exit()
 
 for i,chr in enumerate(expresie):
     # for debugging
@@ -67,6 +77,8 @@ for i,chr in enumerate(expresie):
     # doar daca mai am unde sa merg in fata
     if i<len(expresie)-1:
         next_chr = expresie[i+1]
+    else:
+        next_chr=''
     if chr == ')':
         ind = sift(ind,tati)
     elif chr == '(':
