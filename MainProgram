@@ -1,0 +1,72 @@
+import sys
+tati=[0]
+tati[0]=-1
+fii=[0]*20
+sol=[0]*20
+OPERATORI=['^','~','=','!']
+
+# = este => implica
+# ! este not
+# ~ este or
+expresie='((!Q))'
+ind = 0
+
+def sift(ind,tati):
+    return tati[ind]
+
+def percolate(ind,fii):
+    # daca fac ceva nepermis
+    # omor programul
+    # cu sys.exit()
+    try:
+        if sol[fii[ind][0]] == 0:
+            return fii[ind][0]
+        else:
+            return fii[ind][1]
+    except:
+        print('Expresia este INCORECTA')
+        sys.exit()
+
+def create_nodes2(tati,fii,ind):
+    fii[ind] = list()
+    tati.append(ind)
+    fii[ind].append(len(tati)-1)
+    tati.append(ind)
+    fii[ind].append(len(tati) - 1)
+    ind = len(tati)-2
+    return ind
+
+def create_nodes1(tati,fii,ind):
+    fii[ind] = list()
+    tati.append(ind)
+    fii[ind].append(len(tati)-1)
+    return ind
+
+
+for i,chr in enumerate(expresie):
+    print(i,tati,fii,ind,sol)
+    # doar daca mai am unde sa merg in fata
+    if i<len(expresie)-1:
+        next_chr = expresie[i+1]
+    if chr == ')':
+        ind = sift(ind,tati)
+    elif chr == '(':
+        # peeking over the next item
+        if next_chr == '(':
+            ind = create_nodes2(tati,fii,ind)
+        elif next_chr == '!':
+           ind = create_nodes1(tati,fii,ind)
+        elif next_chr.isalpha():
+            ind = create_nodes2(tati,fii,ind)
+            sol[ind] = next_chr
+    elif chr.isalpha():
+        sol[ind] = chr
+        ind = sift(ind,tati)
+    elif chr in OPERATORI:
+        sol[ind]=chr
+        ind = percolate(ind,fii)
+
+if ind == -1:
+    print('Expresie este CORECTA')
+else:
+    print('Expresia este INCORECTA')
