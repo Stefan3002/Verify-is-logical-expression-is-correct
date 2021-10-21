@@ -5,16 +5,25 @@ tati = [0]
 tati[0] = -1
 fii = [0] * MAX
 sol = [0] * MAX
-OPERATORI = ['^', '~', '=', '!']
+OPERATORI = ['-','^', '~', '=', '!']
 
 # = este => implica
 # ! este not
 # ~ este or
+# - este <=>
+# ^ este and
 
-expresie = '(((((P^Q)=((!R)^(!Q)))^(!G))=((G=P)^(!((P^H))=(!(E^J)))))^A)'
+expresie = '(((P~Q)=(!(P~Q)))^(P~(!(!Q))))'
+# ex: (((P~Q)=(!(P~Q)))∧(P~(!(!Q)))) corect
 # not sure: '()'
 
 ind = 0
+
+#daca nu inchid toate parantezele deschise
+if expresie.count('(') != expresie.count(')'):
+    print('Expresia este INCORECTA')
+    sys.exit()
+
 
 
 def sift(ind, tati):
