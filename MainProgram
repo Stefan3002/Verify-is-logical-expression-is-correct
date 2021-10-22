@@ -13,17 +13,25 @@ OPERATORI = ['-','^', '~', '=', '!']
 # - este <=>
 # ^ este and
 
-expresie = '(((P~Q)=(!(P~Q)))^(P~(!(!Q))))'
-# ex: (((P~Q)=(!(P~Q)))∧(P~(!(!Q)))) corect
+expresie = '(!a)'
+# ex: (((P~Q)=(!(P~Q)))^(P~(!(!Q)))) corect
 # not sure: '()'
 
 ind = 0
 
-#daca nu inchid toate parantezele deschise
+# daca nu inchid toate parantezele deschise
 if expresie.count('(') != expresie.count(')'):
     print('Expresia este INCORECTA')
     sys.exit()
+# daca am mai multe perechi de paranteze decat conectori logici
+nr_conectori=0
+for i in OPERATORI:
+    nr_conectori += expresie.count(i)
 
+
+if ((expresie.count('(') + expresie.count(')')) // 2 != nr_conectori):
+    print('Expresia este INCORECTA')
+    sys.exit()
 
 
 def sift(ind, tati):
