@@ -13,11 +13,12 @@ OPERATORI = ['-','^', '~', '=', '!']
 # - este <=>
 # ^ este and
 
-expresie = '(!a)'
+expresie = '(((P~Q)=(!(P~Q)))^(P~(!(!Q))))'
 # ex: (((P~Q)=(!(P~Q)))^(P~(!(!Q)))) corect
 # not sure: '()'
 
 ind = 0
+
 
 # daca nu inchid toate parantezele deschise
 if expresie.count('(') != expresie.count(')'):
@@ -27,7 +28,6 @@ if expresie.count('(') != expresie.count(')'):
 nr_conectori=0
 for i in OPERATORI:
     nr_conectori += expresie.count(i)
-
 
 if ((expresie.count('(') + expresie.count(')')) // 2 != nr_conectori):
     print('Expresia este INCORECTA')
