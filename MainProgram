@@ -5,7 +5,7 @@ tati = [0]
 tati[0] = -1
 fii = [0] * MAX
 sol = [0] * MAX
-OPERATORI = ['-','^', '~', '=', '!']
+OPERATORI = ['-', '^', '~', '=', '!']
 
 # = este => implica
 # ! este not
@@ -15,17 +15,15 @@ OPERATORI = ['-','^', '~', '=', '!']
 
 expresie = '(((P~Q)=(!(P~Q)))^(P~(!(!Q))))'
 # ex: (((P~Q)=(!(P~Q)))^(P~(!(!Q)))) corect
-# not sure: '()'
 
 ind = 0
-
 
 # daca nu inchid toate parantezele deschise
 if expresie.count('(') != expresie.count(')'):
     print('Expresia este INCORECTA')
     sys.exit()
 # daca am mai multe perechi de paranteze decat conectori logici
-nr_conectori=0
+nr_conectori = 0
 for i in OPERATORI:
     nr_conectori += expresie.count(i)
 
@@ -35,8 +33,17 @@ if ((expresie.count('(') + expresie.count(')')) // 2 != nr_conectori):
 
 
 def sift(ind, tati):
-    # aceasta functie ma duce in sus pe arbore
-    # adica ma ajuta sa urc un nivel
+    """
+    sift(ind, tati) --> This functions takes us to the father of the current node in the solution tree
+    So it moves the pointer upwards
+
+    ind --> This variable is the pointer in the solution tree
+    tati --> This variable is a list that remembers the fathers of each and every node
+
+    The function returns the pointer to the father of the curretn node, or it may return -2
+    which actually means that the program will terminate at some point
+    """
+
     if ind >= 0:
         return tati[ind]
     else:
@@ -45,13 +52,17 @@ def sift(ind, tati):
 
 
 def percolate(ind, fii):
-    # aceasta functie ma duce in jos pe arbore
-    # adica ma ajuta sa cobor un nivel
-    # obs: cobor la fiul care este liber de pe acel nivel
+    """
+    percolate(ind, fii) --> This function takes us one free son of the current node.
+    So it moves the pointer downwards
+    If I try to do something not allowed the program will terminate
 
-    # daca fac ceva nepermis
-    # omor programul
-    # cu sys.exit()
+    ind --> This variable is the pointer in the solution tree
+    fii --> This variable is a list that remembers the sons of each and every node
+
+    The function returns the pointer to the free son of the current node.
+    """
+
     try:
         if sol[fii[ind][0]] == 0:
             return fii[ind][0]
@@ -63,9 +74,15 @@ def percolate(ind, fii):
 
 
 def create_nodes2(tati, fii, ind):
-    # aceasta functie ma ajuta sa creez doua noi noduri
-    # pentru cazul in care gasesc '('
-    # si am nevoie de doua noi noduri
+    """
+    create_nodes2(tati, fii, ind) --> This function creates two new nodes in the tree.
+
+    tati --> This variable is a list that remembers the fathers of each and every node
+    fii --> This variable is a list that remembers the sons of each and every node
+    ind --> This variable is the pointer in the solution tree
+
+    The function returns the new pointer that actually points to one of the newly created sons.
+    """
     fii[ind] = list()
     tati.append(ind)
     fii[ind].append(len(tati) - 1)
@@ -76,15 +93,21 @@ def create_nodes2(tati, fii, ind):
 
 
 def create_nodes1(tati, fii, ind):
-    # aceasta functie ma ajuta sa creez un singur nou nod
-    # pentru cazul in care am gasit '!'
-    # adica negatie
+    """
+    create_nodes1(tati, fii, ind) --> This function creates one new node in the tree.
+
+    tati --> This variable is a list that remembers the fathers of each and every node
+    fii --> This variable is a list that remembers the sons of each and every node
+    ind --> This variable is the pointer in the solution tree
+
+    The function returns the new pointer that actually points NOT to the newly created son, but
+    to the same node as the input one, because I am looking for a negation: "not"
+    """
+
     fii[ind] = list()
     tati.append(ind)
     fii[ind].append(len(tati) - 1)
-    # aici indicele sta pe loc
-    # pentru ca trebuie sa pun '!'
-    # adic anot pe acea pozitie
+
     return ind
 
 
@@ -130,3 +153,6 @@ if ind == -1:
     print('Expresia este CORECTA')
 else:
     print('Expresia este INCORECTA')
+
+# just here to check the documentation
+# print(sift.__doc__)
