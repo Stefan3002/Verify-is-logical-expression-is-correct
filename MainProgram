@@ -1,11 +1,5 @@
 import sys
 
-MAX = 30
-tati = [0]
-tati[0] = -1
-fii = [0] * MAX
-sol = [0] * MAX
-
 OPERATORI = ['-', '^', '~', '=', '!']
 
 # = este => implica
@@ -14,7 +8,20 @@ OPERATORI = ['-', '^', '~', '=', '!']
 # - este <=>
 # ^ este and
 
+#############
+#TO DO: Let the user input the expression
 expresie = '(P^((!Q)^(!(!(Q-(!R))))))'
+MAX = 30
+#############
+
+
+tati = [0]
+tati[0] = -1
+fii = [0] * MAX
+sol = [0] * MAX
+
+
+
 EXPRESION_CORRECT = None
 # ex: (((P~Q)=(!(P~Q)))^(P~(!(!Q)))) corect
 # (P^((!Q)^(!(!(Q-(!R))))))
@@ -208,15 +215,17 @@ else:
 
 # just here to check the documentation
 # print(sift.__doc__)
+
 if EXPRESION_CORRECT == True:
     print('Do you want to interpret this expression? Y/N')
     answer = input()
     if answer == 'N':
         sys.exit()
     elif answer == 'Y':
+        # TO DO: Let the user input the truth values for the atomic propositions.
         start_config = {
             'P': 1,
-            'Q': 1,
+            'Q': 0,
             'R':1
         }
         print(interpret(start_config, tati, fii, sol, 0))
