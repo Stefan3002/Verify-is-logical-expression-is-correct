@@ -5,6 +5,7 @@ tati = [0]
 tati[0] = -1
 fii = [0] * MAX
 sol = [0] * MAX
+
 OPERATORI = ['-', '^', '~', '=', '!']
 
 # = este => implica
@@ -13,9 +14,10 @@ OPERATORI = ['-', '^', '~', '=', '!']
 # - este <=>
 # ^ este and
 
-expresie = '(((P~Q)=(!(P~Q)))^(P~(!(!Q))))'
+expresie = '(P^((!Q)^(!(!(Q-(!R))))))'
+EXPRESION_CORRECT = None
 # ex: (((P~Q)=(!(P~Q)))^(P~(!(!Q)))) corect
-
+# (P^((!Q)^(!(!(Q-(!R))))))
 ind = 0
 
 # daca nu inchid toate parantezele deschise
@@ -48,6 +50,7 @@ def sift(ind, tati):
         return tati[ind]
     else:
         # sau as putea sa omor programul direct
+        EXPRESION_CORRECT = False
         return -2
 
 
@@ -70,6 +73,7 @@ def percolate(ind, fii):
             return fii[ind][1]
     except:
         print('Expresia este INCORECTA')
+        EXPRESION_CORRECT = False
         sys.exit()
 
 
@@ -111,9 +115,55 @@ def create_nodes1(tati, fii, ind):
     return ind
 
 
+def interpret(start_config, tati, fii, sol, ind):
+    """
+    interpret() --> This function interprets the logical expression
+
+    start_config --> Is a list that contains the values of the propositions
+    tati --> Is the father - son relationship tree
+    fii --> Is like tati but in reversed order ( from top to bottom )
+    start_config --> Is a dictionary containing the truth values of the atomic propositions
+
+    The function returns True or False, representing the interpretation of the expression
+    """
+    operator = sol[ind]
+    val = None
+    val2 = None
+    if operator.isalpha():
+        return start_config[operator]
+    elif operator == '!':
+        val = interpret(start_config, tati, fii, sol, fii[ind][0])
+        if val == 0:
+            return 1
+        else:
+            return 0
+    else:
+        if operator in OPERATORI:
+            val = interpret(start_config, tati, fii, sol, fii[ind][0])
+            val2 = interpret(start_config, tati, fii, sol, fii[ind][1])
+            if operator == '^':
+                return val * val2
+            elif operator == '~':
+                if val + val2 <= 1:
+                    return val + val2
+                else:
+                    return 1
+            elif operator == '-':
+                if val == val2:
+                    return 1
+                else:
+                    return 0
+            elif operator == '=':
+                if val == 0:
+                    return 1
+                else:
+                    return 0
+
+
 if expresie.count('(') == 0:
     # daca nu are paranteze deschise
     print('Expresia este INCORECTA')
+    EXPRESION_CORRECT = False
     sys.exit()
 
 for i, chr in enumerate(expresie):
@@ -151,8 +201,25 @@ for i, chr in enumerate(expresie):
 # atunci e corecta
 if ind == -1:
     print('Expresia este CORECTA')
+    EXPRESION_CORRECT = True
 else:
     print('Expresia este INCORECTA')
+    EXPRESION_CORRECT = False
 
 # just here to check the documentation
 # print(sift.__doc__)
+if EXPRESION_CORRECT == True:
+    print('Do you want to interpret this expression? Y/N')
+    answer = input()
+    if answer == 'N':
+        sys.exit()
+    elif answer == 'Y':
+        start_config = {
+            'P': 1,
+            'Q': 1,
+            'R':1
+        }
+        print(interpret(start_config, tati, fii, sol, 0))
+    else:
+        print("Invalid input, terminating program")
+        sys.exit()
